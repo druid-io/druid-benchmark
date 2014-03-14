@@ -1,0 +1,86 @@
+{
+  "type" : "index_hadoop",
+  "hadoopCoordinates":"org.apache.hadoop:hadoop-core:0.20.205-emr",
+  "config": {
+    "dataSource" : "tpch_lineitem_small",
+    "timestampSpec" : {
+      "column": "l_shipdate",
+      "format": "yyyy-MM-dd"
+    },
+    "dataSpec": {
+      "format": "tsv",
+      "delimiter": "|",
+      "columns": [
+        "l_orderkey",
+        "l_partkey",
+        "l_suppkey",
+        "l_linenumber",
+        "l_quantity",
+        "l_extendedprice",
+        "l_discount",
+        "l_tax",
+        "l_returnflag",
+        "l_linestatus",
+        "l_shipdate",
+        "l_commitdate",
+        "l_receiptdate",
+        "l_shipinstruct",
+        "l_shipmode",
+        "l_comment"
+      ],
+      "dimensions" : [
+        "l_orderkey",
+        "l_partkey",
+        "l_suppkey",
+        "l_linenumber",
+        "l_returnflag",
+        "l_linestatus",
+        "l_shipdate",
+        "l_commitdate",
+        "l_receiptdate",
+        "l_shipinstruct",
+        "l_shipmode",
+        "l_comment"
+      ]
+    },
+    "granularitySpec": {
+      "type": "arbitrary",
+      "intervals": [
+        "1980/2020"
+      ]
+    },
+    "pathSpec": {
+      "type": "static",
+      "paths": "s3:\/\/path\/to\/tpch\/data\/lineitem.tbl.gz"
+    },
+    "rollupSpec": {
+      "aggs": [
+        {
+          "type": "count",
+          "name": "count"
+        },
+        {
+          "type": "longSum",
+          "fieldName": "L_QUANTITY",
+          "name": "L_QUANTITY"
+        },
+        {
+          "type": "doubleSum",
+          "fieldName": "L_EXTENDEDPRICE",
+          "name": "L_EXTENDEDPRICE"
+        },
+        {
+          "type": "doubleSum",
+          "fieldName": "L_DISCOUNT",
+          "name": "L_DISCOUNT"
+        },
+        {
+          "type": "doubleSum",
+          "fieldName": "L_TAX",
+          "name": "L_TAX"
+        }
+      ],
+      "rollupGranularity": "day"
+    }
+  }
+}
