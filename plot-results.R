@@ -81,13 +81,11 @@ ggplot(subset(results_summary, datasize == "100GB" & !(engine %in% c("mysql", "m
   scale_fill_discrete(breaks=c("druid-100-x1", "druid-100-x6"), labels=c("8 (1 node)", "48 (6 nodes)")) +
   ylab("Time (seconds)") +
   xlab("Query") +
-  #coord_flip() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   ggtitle(label="Druid Scaling — 100GB") +
   guides(fill=guide_legend(title="Cores"))
-  #theme(legend.position = "bottom")
 
-# scaling factor
+# druid-benchmark-scaling-factor
 ggplot(subset(results_summary, datasize == "100GB" & !(engine %in% c("mysql", "mysql-100"))),
        aes(x=query, y=baseline/time, fill=engine, order=engine)) + 
   geom_bar(position="dodge", stat="identity") +
@@ -95,26 +93,6 @@ ggplot(subset(results_summary, datasize == "100GB" & !(engine %in% c("mysql", "m
   scale_y_continuous(breaks=c(1:7)) +
   ylab("Speedup Factor") +
   xlab("Query") +
-  coord_flip() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   ggtitle(label="Druid Scaling — 100GB") +
-  guides(fill=guide_legend(title="Cores")) +
-  theme(legend.position = "bottom")
-
-
-ggplot(results, aes(x=query, y=time, color=engine)) +
-  geom_boxplot() +
-  ylab("time (seconds)") +
-  coord_flip() +
-  ggtitle(label="Query Time")
-
-ggplot(results_summary, aes(x=query, fill=engine, y=time)) +
-  geom_bar(position="dodge", stat="identity") +
-  ylab("Time (seconds)") +
-  xlab("Query") +
-  ggtitle(label="Median Query Time")
-
-ggplot(results, aes(x=query, y=rows/time/1000000, color=engine)) +
-  geom_boxplot() +
-  ylab("Scan Rate (million rows/second)") +
-  coord_flip() +
-  ggtitle(label="Scan Rate")
+  guides(fill=guide_legend(title="Cores"))

@@ -1,4 +1,3 @@
-druid-benchmark
+Druid Benchmark
 ===============
 
-Druid Benchmark
