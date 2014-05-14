@@ -1,8 +1,11 @@
 #!/bin/sh
 
-mkdir -p data
+if [ $# -lt 1 ]; then echo "Usage: $0 <output_dir>"; exit 2; fi
+data=$1
+
+mkdir -p $data
 pushd .
-cd data
+cd $data
 
 # 1GB data set
 curl -O http://static.druid.io/data/benchmarks/tpch/1/lineitem.tbl.gz
