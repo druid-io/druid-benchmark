@@ -16,4 +16,4 @@ do
     t=$(( time -p ( echo $sql | mysql --host="$host" --user $user --password=$passwd --database tpch ) 2>&1 ) | grep real | sed -e 's/real *//')
     echo "$name	$t"
   done
-done < queries-mysql.sql
+done < sqls/queries-mysql.sql
