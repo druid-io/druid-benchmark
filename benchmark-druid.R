@@ -61,6 +61,7 @@ runBenchmark <- function(absTestFileName, testFuncRegexp)
       return(invisible())
     }
     benchmarkResult <- microbenchmark(testcase(datasource), times=n)
+    benchmarkResult$expr <- paste(absTestFileName, funcName,sep="_")
     results <- rbind(results, benchmarkResult)
   }
 

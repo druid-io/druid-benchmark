@@ -21,7 +21,7 @@ if options.sizeInGB is None:
 
 limit = int(options.sizeInGB) * 1000 * 1000 * 1000
 sum=0
-with open('sqls/tpch_segments_final.sql', 'r') as inFile:
+with open('sqls/tpch_segments.sql', 'r') as inFile:
   with open(options.outputSql, 'w') as outFile:
     for insert in inFile:
       s = insert.find("\\\"size\\\"") + 9
