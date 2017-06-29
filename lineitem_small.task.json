@@ -1,60 +1,47 @@
 {
-  "type" : "index_hadoop",
-  "hadoopCoordinates":"org.apache.hadoop:hadoop-core:0.20.205-emr",
-  "config": {
-    "dataSource" : "tpch_lineitem_small",
-    "timestampSpec" : {
-      "column": "l_shipdate",
-      "format": "yyyy-MM-dd"
+  "type": "index_hadoop",
+  "spec": {
+    "ioConfig": {
+      "type": "hadoop",
+      "inputSpec": {
+        "type": "static",
+        "paths": "s3:\/\/path\/to\/tpch\/data\/lineitem.tbl.*.gz"
+      }
     },
-    "dataSpec": {
-      "format": "tsv",
-      "delimiter": "|",
-      "columns": [
-        "l_orderkey",
-        "l_partkey",
-        "l_suppkey",
-        "l_linenumber",
-        "l_quantity",
-        "l_extendedprice",
-        "l_discount",
-        "l_tax",
-        "l_returnflag",
-        "l_linestatus",
-        "l_shipdate",
-        "l_commitdate",
-        "l_receiptdate",
-        "l_shipinstruct",
-        "l_shipmode",
-        "l_comment"
-      ],
-      "dimensions" : [
-        "l_orderkey",
-        "l_partkey",
-        "l_suppkey",
-        "l_linenumber",
-        "l_returnflag",
-        "l_linestatus",
-        "l_shipdate",
-        "l_commitdate",
-        "l_receiptdate",
-        "l_shipinstruct",
-        "l_shipmode",
-        "l_comment"
-      ]
-    },
-    "granularitySpec": {
-      "type": "arbitrary",
-      "intervals": [
-        "1980/2020"
-      ]
-    },
-    "pathSpec": {
-      "type": "static",
-      "paths": "s3:\/\/path\/to\/tpch\/data\/lineitem.tbl.gz"
-    },
-    "rollupSpec": {
-      "aggs": [
+    "dataSchema": {
+      "dataSource": "tpch_lineitem_small",
+      "granularitySpec": {
+        "type": "arbitrary",
+        "internvals": ["1980/2020"],
+        "segmentGranularity" : "DAY"
+      },
+      "parser": {
+        "type": "hadoopyString",
+        "parseSpec": {
+          "format": "tsv",
+          "dimensionsSpec": {
+            "dimensions": [
+              "l_orderkey",
+              "l_partkey",
+              "l_suppkey",
+              "l_linenumber",
+              "l_returnflag",
+              "l_linestatus",
+              "l_shipdate",
+              "l_commitdate",
+              "l_receiptdate",
+              "l_shipinstruct",
+              "l_shipmode",
+              "l_comment"
+            ]
+          },
+          "timestampSpec": {
+            "column": "l_shipdate",
+            "format": "yyyy-MM-dd"
+          }
+        }
+      },
+      "metricsSpec": [
         {
           "type": "count",
           "name": "count"
@@ -79,8 +66,15 @@
           "fieldName": "L_TAX",
           "name": "L_TAX"
         }
-      ],
-      "rollupGranularity": "day"
+      ]
+    },
+    "tunningConfig": {
+      "type" : "hadoop",
+      "partitionsSpec" : {
+        "type" : "hashed",
+        "targetPartitionSize" : 5000000
+      },
+      "jobProperties" : {}
     }
   }
 }
