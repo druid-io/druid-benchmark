@@ -1,91 +1,100 @@
 {
-  "type" : "index_hadoop",
-  "hadoopCoordinates":"org.apache.hadoop:hadoop-core:0.20.205-emr",
-  "config": {
-    "dataSource" : "tpch_lineitem",
-    "timestampSpec" : {
-      "column": "l_shipdate",
-      "format": "yyyy-MM-dd"
+  "type": "index_hadoop",
+  "spec": {
+    "ioConfig": {
+      "type": "hadoop",
+      "inputSpec": {
+        "type": "static",
+        "paths": "s3:\/\/path\/to\/tpch\/data\/lineitem.tbl.*.gz"
+      }
     },
-    "dataSpec": {
-      "format": "tsv",
-      "delimiter": "|",
-      "columns": [
-        "l_orderkey",
-        "l_partkey",
-        "l_suppkey",
-        "l_linenumber",
-        "l_quantity",
-        "l_extendedprice",
-        "l_discount",
-        "l_tax",
-        "l_returnflag",
-        "l_linestatus",
-        "l_shipdate",
-        "l_commitdate",
-        "l_receiptdate",
-        "l_shipinstruct",
-        "l_shipmode",
-        "l_comment"
-      ],
-      "dimensions" : [
-        "l_orderkey",
-        "l_partkey",
-        "l_suppkey",
-        "l_linenumber",
-        "l_returnflag",
-        "l_linestatus",
-        "l_shipdate",
-        "l_commitdate",
-        "l_receiptdate",
-        "l_shipinstruct",
-        "l_shipmode",
-        "l_comment"
-      ]
-    },
-    "granularitySpec": {
-      "type": "uniform",
-      "intervals": [
-        "1980/2020"
-      ],
-      "gran": "month"
-    },
-    "partitionsSpec": {
-      "type": "random",
-      "targetPartitionSize": 5000000
-    },
-    "pathSpec": {
-      "type": "static",
-      "paths": "s3:\/\/path\/to\/tpch\/data\/lineitem.tbl.*.gz"
-    },
-    "rollupSpec": {
-      "aggs": [
+    "dataSchema": {
+      "dataSource": "tpch_lineitem_small",
+      "granularitySpec": {
+        "type": "uniform",
+        "intervals": ["1992-01-01T00:00:00/1999-01-01T00:00:00"],
+        "queryGranularity": "none",
+        "segmentGranularity" : "day"
+      },
+      "parser": {
+        "type": "hadoopyString",
+        "parseSpec": {
+          "format": "tsv",
+          "delimiter": "|",
+          "columns": [
+            "l_orderkey",
+            "l_partkey",
+            "l_suppkey",
+            "l_linenumber",
+            "l_quantity",
+            "l_extendedprice",
+            "l_discount",
+            "l_tax",
+            "l_returnflag",
+            "l_linestatus",
+            "l_shipdate",
+            "l_commitdate",
+            "l_receiptdate",
+            "l_shipinstruct",
+            "l_shipmode",
+            "l_comment"
+          ],
+          "dimensionsSpec": {
+            "dimensions" : [
+              "l_orderkey",
+              "l_partkey",
+              "l_suppkey",
+              "l_linenumber",
+              "l_returnflag",
+              "l_linestatus",
+              "l_shipdate",
+              "l_commitdate",
+              "l_receiptdate",
+              "l_shipinstruct",
+              "l_shipmode",
+              "l_comment"
+            ]
+          },
+          "timestampSpec": {
+            "column": "l_shipdate",
+            "format": "yyyy-MM-dd"
+          }
+        }
+      },
+      "metricsSpec": [
         {
           "type": "count",
           "name": "count"
         },
         {
           "type": "longSum",
-          "fieldName": "L_QUANTITY",
-          "name": "L_QUANTITY"
+          "fieldName": "l_quantity",
+          "name": "l_quantity"
         },
         {
           "type": "doubleSum",
-          "fieldName": "L_EXTENDEDPRICE",
-          "name": "L_EXTENDEDPRICE"
+          "fieldName": "l_extendedprice",
+          "name": "l_extendedprice"
         },
         {
           "type": "doubleSum",
-          "fieldName": "L_DISCOUNT",
-          "name": "L_DISCOUNT"
+          "fieldName": "l_discount",
+          "name": "l_discount"
         },
         {
           "type": "doubleSum",
-          "fieldName": "L_TAX",
-          "name": "L_TAX"
+          "fieldName": "l_tax",
+          "name": "l_tax"
         }
-      ],
-      "rollupGranularity": "day"
+      ]
+    },
+    "tunningConfig": {
+      "type" : "hadoop",
+      "partitionsSpec" : {
+        "type" : "hashed",
+        "targetPartitionSize" : 5000000
+      },
+      "jobProperties" : {}
     }
   }
 }
