@@ -156,8 +156,8 @@ top_100_parts_details <- function(datasource) {
     aggregations = list(
       sum(metric("l_quantity")),
       sum(metric("l_extendedprice")),
-      min(metric("l_discount")),
-      max(metric("l_discount"))
+      druid.build.aggregation(type="longMin", name = "l_discount_min", fieldName = "l_discount"),
+      druid.build.aggregation(type="longMax", name = "l_discount_max", fieldName = "l_discount")
     ),
     filter = NULL,
     granularity = granularity("all"),
@@ -177,8 +177,8 @@ top_100_parts_filter <- function(datasource) {
     aggregations = list(
       sum(metric("l_quantity")),
       sum(metric("l_extendedprice")),
-      min(metric("l_discount")),
-      max(metric("l_discount"))
+      druid.build.aggregation(type="longMin", name = "l_discount_min", fieldName = "l_discount"),
+      druid.build.aggregation(type="longMax", name = "l_discount_max", fieldName = "l_discount")
     ),
     granularity = granularity("all"),
     context=list(useCache=F, populateCache=F)
